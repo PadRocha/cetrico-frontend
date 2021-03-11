@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'cetrico-frontend';
+  private avoidUrls: string[];
+
+  constructor(
+    private _router: Router
+  ) {
+    this.avoidUrls = [
+      '/home',
+      '/terms-of-use',
+      '/login',
+      '/config',
+    ];
+  }
+
+  isEnabled(): boolean {
+    return this.avoidUrls.some(url => this._router.url.startsWith(url));
+  }
 }

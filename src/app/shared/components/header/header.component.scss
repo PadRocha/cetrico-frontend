@@ -1,0 +1,80 @@
+//*------------------------------------------------------------------*/
+//* NAVBAR
+//*------------------------------------------------------------------*/
+.navbar {
+    background: #fff;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    z-index: 9998;
+    border-bottom: 1px solid #ddd;
+    // .langs a:first-of-type {
+    //     // margin-left: 20px;
+    //     padding-left: 20px;
+    //     border-left: 1px solid #ddd;
+    //     height: 20px;
+    //     line-height: 20px;
+    // }
+    .navbar-brand {
+        color: #333;
+        font-weight: bold;
+    }
+    .navbar-toggler {
+        margin-top: 5px;
+        span {
+            width: 20px;
+            height: 2px;
+            background: #222;
+            margin-bottom: 4px;
+            display: block;
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+        &.active span {
+            margin: 0;
+            &:first-of-type {
+                -webkit-transform: rotate(45deg) translate(3px);
+                transform: rotate(45deg) translate(3px);
+            }
+            &:nth-of-type(2) {
+                opacity: 0;
+            }
+            &:last-of-type {
+                -webkit-transform: rotate(-45deg) translate(3px);
+                transform: rotate(-45deg) translate(3px);
+            }
+        }
+    }
+    // .navbar-text {
+    //     margin-bottom: 0;
+    //     padding-bottom: 5px;
+    // }
+    .navbar-nav a.nav-link {
+        color: #333;
+        margin: 0 5px;
+        font-weight: 400;
+        font-size: 0.95em;
+        &:hover {
+            color: #9055a2;
+        }
+        &.active {
+            color: #9055a2;
+            font-weight: bold;
+        }
+    }
+}
+
+
+/* Navbar Media Query ------------------------------------- */
+
+@media (max-width: 991px) {
+    nav.navbar {
+        .navbar-header,
+        &::after {
+            width: 100%;
+        }
+        &.active::after {
+            width: calc(100% - 170px);
+        }
+    }
+}
