@@ -13,7 +13,7 @@ export class AppComponent {
     private _router: Router
   ) {
     this.avoidUrls = [
-      '/home',
+      '/blog/home',
       '/terms-of-use',
       '/login',
       '/config',

@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   siteName: 'Cétr!co.Blog',
-  httpUrl: 'https://cetricoblog.herokuapp.com/api',
+  httpUrl: 'http://localhost:4000/api',
 };
 
 /*

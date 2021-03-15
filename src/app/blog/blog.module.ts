@@ -6,13 +6,22 @@ import { HomeComponent } from './pages/home/home.component';
 import { AnthologyComponent } from './pages/anthology/anthology.component';
 import { PostComponent } from './pages/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@shared/shared.module';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 
 @NgModule({
   declarations: [HomeComponent, AnthologyComponent, PostComponent, SearchComponent],
   imports: [
     CommonModule,
-    BlogRoutingModule
+    BlogRoutingModule,
+    HttpClientModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AngularEditorModule
   ]
 })
 export class BlogModule { }

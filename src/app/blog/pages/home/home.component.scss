@@ -1,0 +1,249 @@
+section {
+    padding: 100px 0;
+    overflow-x: hidden;
+}
+
+//*------------------------------------------------------------------*/
+// * HERO SECTION
+//*------------------------------------------------------------------*/
+.hero {
+    padding: 0;
+    color: #fff;
+    .container {
+        padding: 200px 20px;
+        position: relative;
+        h1 {
+            line-height: 1.2em;
+        }
+        .hero-link::after {
+            width: 7em !important;
+        }
+        .continue {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            text-decoration: none !important;
+            color: inherit !important;
+            text-transform: uppercase;
+            font-size: 0.75em;
+            opacity: 0.8;
+            cursor: pointer;
+            i {
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+
+/* Hero Section Media Query ------------------------------------- */
+
+@media (max-width: 767px) {
+    .hero .container {
+        padding: 150px 20px;
+    }
+}
+
+//*------------------------------------------------------------------*/
+// * FEATURED POSTS SECTION
+//*------------------------------------------------------------------*/
+.featured-posts {
+    .row {
+        &:nth-of-type(odd) .text {
+            background: #fafafa;
+        }
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+    p {
+        font-weight: 400;
+        color: #777;
+        font-size: 0.95em;
+    }
+    .text-inner {
+        padding: 70px 30px;
+        height: 100%;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    h2 {
+        line-height: 1.1em;
+        color: #333;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        &:hover {
+            color: #555;
+        }
+    }
+    .avatar {
+        max-width: 40px;
+        min-width: 40px;
+        height: 40px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .title,
+    .date,
+    .comments {
+        font-size: 0.8em;
+        font-weight: 400;
+        color: #999;
+    }
+    .title i,
+    .date i,
+    .comments i {
+        margin-right: 5px;
+    }
+    .title::after,
+    .date::after {
+        content: "|";
+        display: inline-block;
+        margin: 0 7px;
+        font-size: 0.9em;
+        color: #ccc;
+    }
+    .comments::after {
+        content: "|";
+        display: inline-block;
+        margin: 0 7px;
+        font-size: 0.9em;
+        color: #ccc;
+        display: none;
+    }
+    .image {
+        max-height: 200px;
+        width: auto;
+        overflow: hidden;
+        padding: 0;
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+        position: relative;
+        img {
+            height: 100%;
+        }
+    }
+    .post-header {
+        margin-bottom: 10px;
+        .category a {
+            color: #9055a2;
+            &:not(:last-child)::after {
+                content: " - ";
+                color: #111;
+            }
+        }
+    }
+    .post-footer {
+        margin-top: 30px;
+    }
+}
+
+
+/* Featured Posts Section Media Query ------------------------------------- */
+
+@media (max-width: 991px) {
+    .featured-posts {
+        .image {
+            -webkit-box-ordinal-group: 2;
+            -ms-flex-order: 1;
+            order: 1;
+            max-height: 300px;
+            min-height: auto !important;
+            width: 100%;
+            flex: 100%;
+            max-width: 100%;
+            img {
+                width: 100%;
+                flex: 100%;
+                max-width: 100%;
+                height: auto !important;
+            }
+        }
+        .text {
+            -webkit-box-ordinal-group: 3;
+            -ms-flex-order: 2;
+            order: 2;
+        }
+    }
+}
+
+@media (max-width: 575px) {
+    .featured-posts .post-footer {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 350px) {
+    .featured-posts {
+        .text-inner {
+            padding: 15px;
+        }
+        .post-footer {
+            font-size: 0.75em;
+        }
+    }
+}
+
+.divider {
+    color: #fff;
+}
+
+//*------------------------------------------------------------------*/
+// * Latest Posts
+//*------------------------------------------------------------------*/
+.latest-posts header {
+    margin-bottom: 50px;
+}
+
+//*------------------------------------------------------------------*/
+// * Newsletter Section
+//*------------------------------------------------------------------*/
+.newsletter {
+    .form-group {
+        position: relative;
+    }
+    input {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        padding: 0 15px;
+        border: 1px solid #111;
+        font-size: 1.1em;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 300;
+    }
+    .submit {
+        height: 60px;
+        padding: 0 30px;
+        line-height: 60px;
+        background: #111;
+        border: 1px solid #111;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: "Open Sans", sans-serif;
+    }
+}
+
+
+/* Newsletter Section Media Query ------------------------------------- */
+
+@media (max-width: 575px) {
+    .newsletter {
+        input {
+            font-size: 0.95em;
+            width: 100%;
+        }
+        .submit {
+            position: static;
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+}

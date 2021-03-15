@@ -1,1 +1,66 @@
-<p>widgets works!</p>
+<!-- Widget [Search Bar Widget]-->
+<div *ngIf="!isSearchEnabled()" class="widget search">
+    <header>
+        <h3>Buscar en el blog</h3>
+    </header>
+    <div class="search-form">
+        <div class="form-group">
+            <input #title (keyup)="enterSearch($event)" type="search" placeholder="¿Qué estás buscando?">
+            <a [routerLink]="['search']" [queryParams]="{title: title.value}" class="submit">
+                <i class="fas fa-search"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Widget [Latest Posts Widget]        -->
+<div class="widget latest-posts">
+    <header>
+        <h3>Posts más vistos</h3>
+    </header>
+    <div class="blog-posts">
+        <a *ngFor="let post of posts" [routerLink]="['/blog/post', post.title.split(' ').join('_')]" class="btn">
+            <div class="item d-flex align-items-center">
+                <div class="image">
+                    <img [src]="post.image.url" alt="..." class="img-fluid">
+                </div>
+                <div class="title">
+                    <strong>{{post.title | capitalize}}</strong>
+                    <div class="d-flex align-items-center">
+                        <!-- <div class="views"><i class="far fa-eye"></i> {{post.views}}</div> -->
+                        <div class="comments"><i class="far fa-comment-alt"></i>{{post.countComments}}</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<!-- Widget [Categories Widget]-->
+<div class="widget categories">
+    <header>
+        <h3>Categorías</h3>
+    </header>
+    <div class="items">
+        <a *ngFor="let category of categories" [routerLink]="['/blog/search']" [queryParams]="{category: category.name}"
+            class="item d-flex justify-content-between">
+            <span class="category">{{category.name}}</span>
+            <span class="number">{{category.countPosts}}</span>
+        </a>
+    </div>
+    <button (click)="addCategory()" [ngClass]="{'disabled': !categoryHasNextPage && categoryIsLoading}" type="button"
+        class="btn btn-outline-primary btn-sm btn-block mt-3">
+        Ver más
+    </button>
+</div>
+<!-- Widget [Tags Cloud Widget]-->
+<div class="widget tags">
+    <header>
+        <h3>Tags</h3>
+    </header>
+    <ul class="list-inline tag-container">
+        <li *ngFor="let tag of tags" class="list-inline-item">
+            <a class="tag" [routerLink]="['/blog/search']" [queryParams]="{tags: tag.name}">#{{tag.name}}</a>
+        </li>
+    </ul>
+    <button (click)="addTag()" [ngClass]="{'disabled': !tagHasNextPage && tagIsLoading}" type="button"
+        class="btn btn-outline-primary btn-sm btn-block mt-3">Ver más</button>
+</div>

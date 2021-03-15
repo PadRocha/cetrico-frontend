@@ -14,7 +14,7 @@ const routes: Routes = [{
     path: 'anthology',
     component: AnthologyComponent
   }, {
-    path: 'post',
+    path: 'post/:title',
     component: PostComponent
   }, {
     path: 'search',

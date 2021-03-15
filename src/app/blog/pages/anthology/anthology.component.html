@@ -1,1 +1,65 @@
-<p>anthology works!</p>
+<!-- Latest Posts -->
+<main class="posts-listing">
+    <div id="post-list" class="container">
+        <div class="row">
+            <!-- post -->
+            <div *ngFor="let post of posts" class="post col-xl-6">
+                <div class="post-thumbnail">
+                    <a [routerLink]="['/blog/post', post.title.split(' ').join('_')]">
+                        <img [src]="post.image.url" alt="..." class="img-fluid">
+                    </a>
+                </div>
+                <div class="post-details">
+                    <div class="post-meta d-flex justify-content-between">
+                        <div class="date meta-last">{{post.createdAt | date: 'dd MMM | yyyy'}}</div>
+                        <div class="category">
+                            <a [routerLink]="['/blog/search']" [queryParams]="{category: post.category.name}"
+                                class="btn">{{post.category.name}}</a>
+                        </div>
+                    </div>
+                    <a [routerLink]="['/blog/post', post.title.split(' ').join('_')]" class="btn">
+                        <h3 class="h4">{{post.title | capitalize}}</h3>
+                    </a>
+                    <p class="text-muted">{{post.desc}}</p>
+                    <footer class="post-footer d-flex align-items-center">
+                        <a href="#" class="author d-flex align-items-center flex-wrap">
+                            <div class="avatar">
+                                <img *ngIf="post.user?.image; else user_default" [src]="post.user.image.url" alt="..."
+                                    class="img-fluid">
+                                <ng-template #user_default>
+                                    <img src="assets/img/user-default.png" alt="..." class="img-fluid">
+                                </ng-template>
+                            </div>
+                            <div class="title"><span>{{post.user.nickname}}</span></div>
+                        </a>
+                        <div class="date"><i class="far fa-clock"></i> {{post.createdAt | timeAgo}} </div>
+                        <div class="comments meta-last"><i class="far fa-comment-alt"></i>{{post.countComments}}</div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-template d-flex justify-content-center">
+                <li *ngIf="paginateInfo.hasPrevPage" class="page-item">
+                    <a [routerLink]="['/blog/anthology']" [queryParams]="{page: paginateInfo.prevPage}"
+                        class="page-link">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                </li>
+                <li *ngFor="let page of paginate" class="page-item">
+                    <a [routerLink]="['/blog/anthology']" [queryParams]="{page: page}"
+                        [class.is-active]="this.paginateInfo.page === page" class="page-link">
+                        {{page}}
+                    </a>
+                </li>
+                <li *ngIf="paginateInfo.hasNextPage" class="page-item">
+                    <a [routerLink]="['/blog/anthology']" [queryParams]="{page: paginateInfo.nextPage}"
+                        class="page-link">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
