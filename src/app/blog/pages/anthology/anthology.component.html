@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <a [routerLink]="['/blog/post', post.title.split(' ').join('_')]" class="btn">
-                        <h3 class="h4">{{post.title | capitalize}}</h3>
+                        <h3 class="h4">{{post.title | titlecase}}</h3>
                     </a>
                     <p class="text-muted">{{post.desc}}</p>
                     <footer class="post-footer d-flex align-items-center">
@@ -30,7 +30,7 @@
                                     <img src="assets/img/user-default.png" alt="..." class="img-fluid">
                                 </ng-template>
                             </div>
-                            <div class="title"><span>{{post.user.nickname}}</span></div>
+                            <div class="title"><span>{{post.user.nickname | titlecase}}</span></div>
                         </a>
                         <div class="date"><i class="far fa-clock"></i> {{post.createdAt | timeAgo}} </div>
                         <div class="comments meta-last"><i class="far fa-comment-alt"></i>{{post.countComments}}</div>

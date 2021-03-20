@@ -26,7 +26,7 @@
                 <div class="title">
                     <strong>{{post.title | capitalize}}</strong>
                     <div class="d-flex align-items-center">
-                        <!-- <div class="views"><i class="far fa-eye"></i> {{post.views}}</div> -->
+                        <div class="views"><i class="far fa-eye"></i> {{post.views}}</div>
                         <div class="comments"><i class="far fa-comment-alt"></i>{{post.countComments}}</div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
             <span class="number">{{category.countPosts}}</span>
         </a>
     </div>
-    <button (click)="addCategory()" [ngClass]="{'disabled': !categoryHasNextPage && categoryIsLoading}" type="button"
+    <button (click)="addCategory()" [ngClass]="{'d-none': !categoryHasNextPage && categoryIsLoading}" type="button"
         class="btn btn-outline-primary btn-sm btn-block mt-3">
         Ver más
     </button>
@@ -61,6 +61,6 @@
             <a class="tag" [routerLink]="['/blog/search']" [queryParams]="{tags: tag.name}">#{{tag.name}}</a>
         </li>
     </ul>
-    <button (click)="addTag()" [ngClass]="{'disabled': !tagHasNextPage && tagIsLoading}" type="button"
+    <button (click)="addTag()" [ngClass]="{'d-none': !tagHasNextPage && tagIsLoading}" type="button"
         class="btn btn-outline-primary btn-sm btn-block mt-3">Ver más</button>
 </div>

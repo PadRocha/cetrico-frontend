@@ -38,6 +38,7 @@
               "node_modules/@fortawesome/fontawesome-free-webfonts/scss/fa-brands.scss",
               "node_modules/@fortawesome/fontawesome-free-webfonts/scss/fa-solid.scss",
               "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/sweetalert2/src/sweetalert2.scss",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {

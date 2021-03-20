@@ -15,7 +15,7 @@ export class AppComponent {
     this.avoidUrls = [
       '/blog/home',
       '/terms-of-use',
-      '/login',
+      '/auth',
       '/config',
     ];
   }

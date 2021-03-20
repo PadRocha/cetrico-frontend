@@ -10,10 +10,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { ContactComponent } from './pages/contact/contact.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, AnthologyComponent, PostComponent, SearchComponent],
+  declarations: [HomeComponent, AnthologyComponent, PostComponent, SearchComponent, ContactComponent],
   imports: [
     CommonModule,
     BlogRoutingModule,

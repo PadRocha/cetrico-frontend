@@ -11,8 +11,10 @@
                     </div>
                 </div>
                 <h1 *ngIf="post?.title">
-                    {{post.title | capitalize}}
-                    <span class="btn btn-info"><i class="fa fa-bookmark" aria-hidden="true"></i></span>
+                    {{post.title | titlecase}}
+                    <span *ngIf="this.user.identifier" class="btn btn-info">
+                        <i class="fa fa-bookmark" aria-hidden="true"></i>
+                    </span>
                 </h1>
                 <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                     <a href="#" class="author d-flex align-items-center flex-wrap">
@@ -23,7 +25,7 @@
                                 <img src="assets/img/user-default.png" alt="..." class="img-fluid">
                             </ng-template>
                         </div>
-                        <div class="title"><span>{{post?.user.nickname}}</span></div>
+                        <div class="title"><span>{{post?.user.nickname | titlecase}}</span></div>
                     </a>
                     <div class="d-flex align-items-center flex-wrap">
                         <div class="date"><i class="far fa-clock"></i> {{post?.createdAt | timeAgo}}</div>
@@ -32,7 +34,7 @@
                     </div>
                 </div>
                 <div class="post-body">
-                    <p class="lead" [innerText]="post?.desc"></p>
+                    <p class="lead">{{post?.desc | capitalize}}</p>
                     <div [innerHTML]="post?.content"></div>
                 </div>
                 <div class="post-tags list-inline">
@@ -45,82 +47,69 @@
                         <div class="icon prev"><i class="fa fa-angle-left"></i></div>
                         <div class="text">
                             <strong class="text-primary">Previous Post </strong>
-                            <h6 [innerText]="previous.title | capitalize"></h6>
+                            <h6>{{previous.title | capitalize}}</h6>
                         </div>
                     </a>
                     <a *ngIf="!!next" [routerLink]="['/blog/post', next.title.split(' ').join('_')]"
                         class="next-post text-right d-flex align-items-center justify-content-end">
                         <div class="text">
                             <strong class="text-primary">Next Post </strong>
-                            <h6 [innerText]="next.title | capitalize"></h6>
+                            <h6>{{next.title | capitalize}}</h6>
                         </div>
                         <div class="icon next"><i class="fa fa-angle-right"></i></div>
                     </a>
                 </div>
-                <div class="post-comments">
+                <div #commentsSpace class="row post-comments">
                     <header>
-                        <h3>Post Comments<span class="no-of-comments">(3)</span></h3>
+                        <h3>Post Comments<span class="no-of-comments">({{commentPaginate.totalDocs}})</span></h3>
                     </header>
-                    <div class="comment">
+                    <div *ngFor="let comment of comments" class="comment">
                         <div class="comment-header d-flex justify-content-between">
                             <div class="user d-flex align-items-center">
-                                <div class="image"><img src="assets/img/user.svg" alt="..."
-                                        class="img-fluid rounded-circle"></div>
-                                <div class="title"><strong>Jabi Hernandiz</strong><span class="date">May 2016</span>
+                                <div class="image">
+                                    <!-- <img *ngIf="comment?.user?.image" src="assets/img/user.svg" alt="..." class="img-fluid rounded-circle"> -->
+                                    <img src="assets/img/user.svg" alt="..." class="img-fluid rounded-circle">
+                                </div>
+                                <div class="title">
+                                    <strong *ngIf="comment?.user else anonNick">
+                                        {{comment.user.nickname | titlecase}}
+                                    </strong>
+                                    <ng-template #anonNick>
+                                        <strong>{{comment?.nickname | titlecase}}</strong>
+                                    </ng-template>
+                                    <span class="date">{{comment.createdAt | date: 'dd MMM | yyyy'}}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="comment-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
+                        <div [innerHTML]="comment.content" class="comment-body"></div>
                     </div>
-                    <div class="comment">
-                        <div class="comment-header d-flex justify-content-between">
-                            <div class="user d-flex align-items-center">
-                                <div class="image"><img src="assets/img/user.svg" alt="..."
-                                        class="img-fluid rounded-circle"></div>
-                                <div class="title"><strong>Nikolas</strong><span class="date">May 2016</span></div>
-                            </div>
-                        </div>
-                        <div class="comment-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="comment-header d-flex justify-content-between">
-                            <div class="user d-flex align-items-center">
-                                <div class="image"><img src="assets/img/user.svg" alt="..."
-                                        class="img-fluid rounded-circle"></div>
-                                <div class="title"><strong>John Doe</strong><span class="date">May 2016</span></div>
-                            </div>
-                        </div>
-                        <div class="comment-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                        </div>
-                    </div>
+                    <button *ngIf="commentPaginate.hasNextPage" (click)="addComment()" type="button"
+                        class="btn btn-outline-secondary btn-sm btn-block">
+                        Ver más comentarios
+                    </button>
                 </div>
                 <div class="add-comment">
                     <header>
-                        <h3 class="">Deja un comentario</h3>
+                        <h3>Deja un comentario</h3>
                     </header>
-                    <form action="#" class="commenting-form">
+                    <form [formGroup]="newComment" (ngSubmit)="onCommentSubmit()" class="commenting-form">
                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <input type="text" placeholder="Nombre (opcional)" class="form-control">
+                            <div *ngIf="this.user?.nickname else userInputs" class="col-12">
+                                Como usuario: {{this.user.nickname | titlecase}}
                             </div>
-                            <div class="form-group col-md-6">
-                                <input type="email" placeholder="Correo Electrónico (no será compartido)"
-                                    class="form-control">
-                            </div>
+                            <ng-template #userInputs>
+                                <div class="form-group col-md-6">
+                                    <input formControlName="nickname" type="text" class="form-control"
+                                        placeholder="Nombre (opcional)">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input formControlName="email" type="email" class="form-control"
+                                        placeholder="Correo Electrónico (no será compartido)">
+                                </div>
+                            </ng-template>
                             <div class="form-group col-md-12">
-                                <!-- <textarea placeholder="Escribe tu comentario" class="form-control"></textarea> -->
-                                <angular-editor [config]="editorConfig"></angular-editor>
+                                <angular-editor formControlName="content" [config]="editorConfig">
+                                </angular-editor>
                             </div>
                             <div class="form-group col-md-12">
                                 <button type="submit" class="btn btn-secondary">Submit Comment</button>

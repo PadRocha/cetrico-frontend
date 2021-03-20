@@ -97,9 +97,12 @@ export class SearchComponent implements OnInit {
       query.tags = this.tags.map(tag => this.tagArray.find(({ name }) => name === tag)?._id).filter(tag => tag);
     if (this.categoryForm.valid)
       query.category = this.categoryArray.find(({ name }) => name === this.categoryForm.value)?._id;
-    if (Object.keys(query).length > 0) this._arrivals.listPost(query).subscribe(({ data }) => {
-      this.posts = data ?? new Array<IPost>();
-    });
+    if (Object.keys(query).length > 0) {
+      this._arrivals.listPost(query).subscribe(({ data }) => {
+        this.posts = data ?? new Array<IPost>();
+      });
+    } else
+      this.posts = new Array<IPost>();
   }
 
   tagsUpdate(tags: string[]): void {

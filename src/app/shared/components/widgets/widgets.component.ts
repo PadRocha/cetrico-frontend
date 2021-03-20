@@ -1,5 +1,4 @@
-import { DOCUMENT, ViewportScroller } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ICategory } from '@shared/models/category';
 import { IPost } from '@shared/models/post';
@@ -26,17 +25,16 @@ export class WidgetsComponent implements OnInit {
   constructor(
     private _router: Router,
     private _arrivals: ArrivalsService,
-    private _scroller: ViewportScroller,
   ) {
     this.posts = new Array<IPost>();
     this.categories = new Array<ICategory>();
     this.categoryIsLoading = true;
     this.categoryPage = 1;
-    this.categoryHasNextPage = true;
+    this.categoryHasNextPage = false;
     this.tags = new Array<ITag>();
     this.tagIsLoading = true;
     this.tagPage = 1;
-    this.tagHasNextPage = true;
+    this.tagHasNextPage = false;
   }
 
   ngOnInit() {
@@ -73,7 +71,7 @@ export class WidgetsComponent implements OnInit {
 
   enterSearch({ target, key }: KeyboardEvent): void {
     if (key === 'Enter') {
-      this._router.navigate(['/blog/search'], {queryParams: { title: (target as HTMLInputElement).value }});
+      this._router.navigate(['/blog/search'], { queryParams: { title: (target as HTMLInputElement).value } });
     }
   }
 

@@ -7,7 +7,7 @@ export interface MetaConfig {
   title: string;
   description: string;
   image: string;
-  slug: string;
+  slug?: string;
 }
 
 @Injectable({

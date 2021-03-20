@@ -1,8 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { IComment } from '@shared/models/comment';
 import { IPost } from '@shared/models/post';
+import { IUser } from 'app/auth/models/user';
+import { AuthService } from 'app/auth/services/auth.service';
 import { ArrivalsService } from 'app/blog/services/arrivals/arrivals.service';
+import { MetaService } from 'app/blog/services/meta/meta.service';
+import { ShippingService } from 'app/blog/services/shipping/shipping.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-post',
@@ -17,11 +25,29 @@ export class PostComponent implements OnInit {
   post: IPost;
   previous: IPost | null;
   next: IPost | null;
+  user: {
+    identifier: string;
+    nickname: string;
+    roles: string[];
+  };
+  commentsPage: number;
+  commentPaginate: {
+    totalDocs: number;
+    hasNextPage: boolean;
+  };
+  commentsLoaded: boolean;
+  comments: IComment[];
+  newComment: FormGroup;
+  @ViewChild('commentsSpace') commentsSpace!: ElementRef<HTMLDivElement>;
 
   constructor(
+    private _router: Router,
     private _route: ActivatedRoute,
-    // private _scroller: ViewportScroller,
+    private _meta: MetaService,
+    private _scroller: ViewportScroller,
     private _arrival: ArrivalsService,
+    private _shipping: ShippingService,
+    public _auth: AuthService,
   ) {
     this.editorConfig = {
       editable: true,
@@ -122,10 +148,43 @@ export class PostComponent implements OnInit {
     this.titlePost = '';
     this.idPost = '';
     this.previous = null;
+    this.commentsPage = 1;
+    this.commentsLoaded = false;
+    this.user = {
+      identifier: null,
+      nickname: null,
+      roles: new Array<string>(),
+    }
+    this.commentPaginate = {
+      totalDocs: null,
+      hasNextPage: false,
+    }
+    this.comments = new Array<IComment>();
+    this.newComment = new FormGroup({
+      nickname: new FormControl(''),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      content: new FormControl('', [Validators.required]),
+    })
   }
 
   ngOnInit(): void {
     this.paramsMap();
+    if (this._auth.loggedIn()) {
+      this._auth.getUser().subscribe(res => {
+        this.user = res;
+      }, err => {
+
+      });
+    }
+  }
+
+  @HostListener('window:scroll', ['$event']) onScroll($event: Event): void {
+    const { scrollTop, clientHeight } = ($event.target as HTMLDocument).documentElement;
+    const elementOffsetTop = this.commentsSpace.nativeElement.offsetTop - clientHeight;
+    if ((scrollTop >= elementOffsetTop) && !this.commentsLoaded) {
+      this.commentsLoaded = true;
+      this.listComment();
+    }
   }
 
   private paramsMap(): void {
@@ -137,10 +196,19 @@ export class PostComponent implements OnInit {
 
   private getPost(): void {
     this._arrival.getPost(this.titlePost).subscribe(({ data }) => {
+      this._meta.updateTitle(data.title);
+      this._meta.updateDescription(data.desc);
+      this._meta.generateTags({
+        title: data.title,
+        description: data.desc,
+        image: data.image.url,
+      });
       this.post = data;
-      this.idPost = data._id
+      this.idPost = data._id;
       this.getPostPrevious();
       this.getPostNext();
+    }, err => {
+      this._router.navigate(['/blog/home']);
     });
   }
 
@@ -154,5 +222,54 @@ export class PostComponent implements OnInit {
     this._arrival.getPostNext(this.idPost).subscribe(({ data }) => {
       this.next = data;
     });
+  }
+
+  private listComment(): void {
+    this._arrival.listCommentPost(this.idPost, this.commentsPage).subscribe(res => {
+      this.comments = this.comments.concat(res.data);
+      this.commentPaginate = {
+        totalDocs: res.totalDocs,
+        hasNextPage: res.hasNextPage,
+      }
+    }, () => this.commentsLoaded = false);
+  }
+
+  addComment(): void {
+    ++this.commentsPage;
+    this.listComment();
+  }
+
+  onCommentSubmit(): void {
+    if ((this._auth.loggedIn() && this.newComment.get('content').valid) || this.newComment.valid) {
+      let commentData = !this.user.identifier
+        ? {
+          ...this.newComment.getRawValue(),
+          post: this.idPost,
+        }
+        : {
+          content: this.newComment.get('content').value,
+          post: this.idPost,
+          user: this.user.identifier,
+        };
+      this._shipping.sendComment(commentData).subscribe(({ data }) => {
+        ++this.commentPaginate.totalDocs;
+        this.comments.unshift(data);
+        this._scroller.scrollToPosition([0, this.commentsSpace.nativeElement.offsetTop])
+      }, () => Swal.fire({
+        position: 'bottom-end',
+        icon: 'error',
+        title: 'El comentario no se ha enviado',
+        text: 'Provablemente uses un Nick ya registrado o has sido bloqueado',
+        showClass: {
+          popup: 'animate__animated animate__fadeInUp',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutDown',
+        },
+        showConfirmButton: false,
+        timer: 2000,
+      }));
+      this.newComment.reset();
+    }
   }
 }
