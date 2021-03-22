@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 
 import { BlogRoutingModule } from './blog-routing.module';
 import { HomeComponent } from './pages/home/home.component';
@@ -22,7 +22,8 @@ import { ContactComponent } from './pages/contact/contact.component';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularEditorModule
-  ]
+    AngularEditorModule,
+  ],
+  providers: [TitleCasePipe]
 })
 export class BlogModule { }

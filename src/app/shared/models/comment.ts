@@ -2,6 +2,7 @@ import { IUser } from "app/auth/models/user";
 import { IPost } from "./post";
 
 export interface IComment {
+    readonly _id: string;
     readonly content: string;
     readonly post: string;
     readonly user?: IUser;

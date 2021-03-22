@@ -54,4 +54,8 @@ export class ArrivalsService {
   listCommentPost(post: string, page: number) {
     return this._http.get<DataPaginated<IComment>>(`${this.url}/comment/${post}/page/${page}`);
   }
+
+  getBookmark(post: string, user: string) {
+    return this._http.get<{ data: { toogle: boolean; } }>(`${this.url}/bookmark/post/${post}/user/${user}`);
+  }
 }

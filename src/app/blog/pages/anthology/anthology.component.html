@@ -20,7 +20,7 @@
                     <a [routerLink]="['/blog/post', post.title.split(' ').join('_')]" class="btn">
                         <h3 class="h4">{{post.title | titlecase}}</h3>
                     </a>
-                    <p class="text-muted">{{post.desc}}</p>
+                    <p class="text-muted">{{post.desc | capitalize}}</p>
                     <footer class="post-footer d-flex align-items-center">
                         <a href="#" class="author d-flex align-items-center flex-wrap">
                             <div class="avatar">

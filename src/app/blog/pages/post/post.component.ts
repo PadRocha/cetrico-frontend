@@ -1,4 +1,4 @@
-import { ViewportScroller } from '@angular/common';
+import { TitleCasePipe, ViewportScroller } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,8 +8,11 @@ import { IPost } from '@shared/models/post';
 import { IUser } from 'app/auth/models/user';
 import { AuthService } from 'app/auth/services/auth.service';
 import { ArrivalsService } from 'app/blog/services/arrivals/arrivals.service';
+import { ExchangeService } from 'app/blog/services/exchange/exchange.service';
 import { MetaService } from 'app/blog/services/meta/meta.service';
 import { ShippingService } from 'app/blog/services/shipping/shipping.service';
+import { forkJoin } from 'rxjs';
+import { debounceTime, take } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -30,6 +33,7 @@ export class PostComponent implements OnInit {
     nickname: string;
     roles: string[];
   };
+  bookmarkToogle: boolean;
   commentsPage: number;
   commentPaginate: {
     totalDocs: number;
@@ -47,7 +51,9 @@ export class PostComponent implements OnInit {
     private _scroller: ViewportScroller,
     private _arrival: ArrivalsService,
     private _shipping: ShippingService,
-    public _auth: AuthService,
+    private _exchange: ExchangeService,
+    private _auth: AuthService,
+    private _titlecase: TitleCasePipe,
   ) {
     this.editorConfig = {
       editable: true,
@@ -155,6 +161,7 @@ export class PostComponent implements OnInit {
       nickname: null,
       roles: new Array<string>(),
     }
+    this.bookmarkToogle = false;
     this.commentPaginate = {
       totalDocs: null,
       hasNextPage: false,
@@ -169,13 +176,6 @@ export class PostComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsMap();
-    if (this._auth.loggedIn()) {
-      this._auth.getUser().subscribe(res => {
-        this.user = res;
-      }, err => {
-
-      });
-    }
   }
 
   @HostListener('window:scroll', ['$event']) onScroll($event: Event): void {
@@ -190,26 +190,41 @@ export class PostComponent implements OnInit {
   private paramsMap(): void {
     this._route.paramMap.subscribe(params => {
       this.titlePost = params.get('title');
-      this.getPost();
+      this.getAssets();
     });
   }
 
-  private getPost(): void {
-    this._arrival.getPost(this.titlePost).subscribe(({ data }) => {
-      this._meta.updateTitle(data.title);
-      this._meta.updateDescription(data.desc);
-      this._meta.generateTags({
-        title: data.title,
-        description: data.desc,
-        image: data.image.url,
-      });
-      this.post = data;
-      this.idPost = data._id;
-      this.getPostPrevious();
-      this.getPostNext();
-    }, err => {
-      this._router.navigate(['/blog/home']);
+  private dataManagment({ data }: { data: IPost }): void {
+    this._meta.updateTitle(this._titlecase.transform(data.title) || '');
+    this._meta.updateDescription(data.desc);
+    this._meta.generateTags({
+      title: data.title,
+      description: data.desc,
+      image: data.image.url,
     });
+    this.post = data;
+    this.idPost = data._id;
+    this.getPostPrevious();
+    this.getPostNext();
+  }
+
+  private getAssets(): void {
+    if (!this._auth.loggedIn()) {
+      this._arrival.getPost(this.titlePost)
+        .subscribe(res => this.dataManagment(res), () => this._router.navigate(['/blog/home']));
+    } else {
+      const post = this._arrival.getPost(this.titlePost).pipe(take(1));
+      const user = this._auth.getUser().pipe(take(1));
+      forkJoin({ post, user }).subscribe(({ post, user }) => {
+        this.dataManagment(post);
+        this.user = user;
+        this._arrival.getBookmark(this.idPost, this.user.identifier).subscribe(({ data }) => {
+          this.bookmarkToogle = data.toogle;
+        }, () => { });
+      }, () => {
+        this._router.navigate(['/blog/home'])
+      });
+    }
   }
 
   private getPostPrevious(): void {
@@ -232,6 +247,11 @@ export class PostComponent implements OnInit {
         hasNextPage: res.hasNextPage,
       }
     }, () => this.commentsLoaded = false);
+  }
+
+  toogleBookmark(): void {
+    this._exchange.updateBookmark(this.idPost, this.user.identifier, this.bookmarkToogle)
+      .subscribe(res => this.bookmarkToogle = !this.bookmarkToogle, err => { })
   }
 
   addComment(): void {
