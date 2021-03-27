@@ -5,14 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { IComment } from '@shared/models/comment';
 import { IPost } from '@shared/models/post';
-import { IUser } from 'app/auth/models/user';
-import { AuthService } from 'app/auth/services/auth.service';
+import { AuthService } from 'app/auth/services/auth/auth.service';
+import { UserService } from 'app/auth/services/user/user.service';
 import { ArrivalsService } from 'app/blog/services/arrivals/arrivals.service';
 import { ExchangeService } from 'app/blog/services/exchange/exchange.service';
 import { MetaService } from 'app/blog/services/meta/meta.service';
 import { ShippingService } from 'app/blog/services/shipping/shipping.service';
 import { forkJoin } from 'rxjs';
-import { debounceTime, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -28,11 +28,6 @@ export class PostComponent implements OnInit {
   post: IPost;
   previous: IPost | null;
   next: IPost | null;
-  user: {
-    identifier: string;
-    nickname: string;
-    roles: string[];
-  };
   bookmarkToogle: boolean;
   commentsPage: number;
   commentPaginate: {
@@ -53,6 +48,7 @@ export class PostComponent implements OnInit {
     private _shipping: ShippingService,
     private _exchange: ExchangeService,
     private _auth: AuthService,
+    public _user: UserService,
     private _titlecase: TitleCasePipe,
   ) {
     this.editorConfig = {
@@ -156,11 +152,6 @@ export class PostComponent implements OnInit {
     this.previous = null;
     this.commentsPage = 1;
     this.commentsLoaded = false;
-    this.user = {
-      identifier: null,
-      nickname: null,
-      roles: new Array<string>(),
-    }
     this.bookmarkToogle = false;
     this.commentPaginate = {
       totalDocs: null,
@@ -195,7 +186,7 @@ export class PostComponent implements OnInit {
   }
 
   private dataManagment({ data }: { data: IPost }): void {
-    this._meta.updateTitle(this._titlecase.transform(data.title) || '');
+    this._meta.updateTitle(this._titlecase.transform(data.title));
     this._meta.updateDescription(data.desc);
     this._meta.generateTags({
       title: data.title,
@@ -214,15 +205,15 @@ export class PostComponent implements OnInit {
         .subscribe(res => this.dataManagment(res), () => this._router.navigate(['/blog/home']));
     } else {
       const post = this._arrival.getPost(this.titlePost).pipe(take(1));
-      const user = this._auth.getUser().pipe(take(1));
+      const user = this._user.get().pipe(take(1));
       forkJoin({ post, user }).subscribe(({ post, user }) => {
         this.dataManagment(post);
-        this.user = user;
-        this._arrival.getBookmark(this.idPost, this.user.identifier).subscribe(({ data }) => {
+        this._user.set(user);
+        this._arrival.getBookmark(this.idPost, this._user.getId()).subscribe(({ data }) => {
           this.bookmarkToogle = data.toogle;
         }, () => { });
       }, () => {
-        this._router.navigate(['/blog/home'])
+        this._router.navigate(['/blog/home']);
       });
     }
   }
@@ -250,7 +241,7 @@ export class PostComponent implements OnInit {
   }
 
   toogleBookmark(): void {
-    this._exchange.updateBookmark(this.idPost, this.user.identifier, this.bookmarkToogle)
+    this._exchange.updateBookmark(this.idPost, this._user.getId(), this.bookmarkToogle)
       .subscribe(res => this.bookmarkToogle = !this.bookmarkToogle, err => { })
   }
 
@@ -261,7 +252,7 @@ export class PostComponent implements OnInit {
 
   onCommentSubmit(): void {
     if ((this._auth.loggedIn() && this.newComment.get('content').valid) || this.newComment.valid) {
-      let commentData = !this.user.identifier
+      const commentData = !this._user.getId()
         ? {
           ...this.newComment.getRawValue(),
           post: this.idPost,
@@ -269,7 +260,7 @@ export class PostComponent implements OnInit {
         : {
           content: this.newComment.get('content').value,
           post: this.idPost,
-          user: this.user.identifier,
+          user: this._user.getId(),
         };
       this._shipping.sendComment(commentData).subscribe(({ data }) => {
         ++this.commentPaginate.totalDocs;

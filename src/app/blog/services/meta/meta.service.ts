@@ -31,7 +31,8 @@ export class MetaService {
    * @memberof MetaService
    */
   updateTitle(title: string) {
-    this._title.setTitle(`${title} | ${this.site_name}`);
+    if (title)
+      this._title.setTitle(`${title} | ${this.site_name}`);
   }
 
   /**
@@ -50,7 +51,8 @@ export class MetaService {
    * @memberof MetaService
    */
   updateOgUrl(slug: string) {
-    this._meta.updateTag({ name: 'og:url', content: slug })
+    if (slug)
+      this._meta.updateTag({ name: 'og:url', content: slug })
   }
 
   /**
@@ -60,7 +62,8 @@ export class MetaService {
    * @memberof MetaService
    */
   updateDescription(desc: string) {
-    this._meta.updateTag({ name: 'description', content: desc })
+    if (desc)
+      this._meta.updateTag({ name: 'description', content: desc })
   }
   /*------------------------------------------------------------------*/
   // Actualiza toda las tag de Meta

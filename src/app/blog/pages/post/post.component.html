@@ -12,7 +12,7 @@
                 </div>
                 <h1 *ngIf="post?.title">
                     {{post.title | titlecase}}
-                    <button *ngIf="this.user.identifier" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
+                    <button *ngIf="_user.setted()" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
                         (click)="toogleBookmark()" class="btn" title="Bookmark this post">
                         <i class="fa fa-bookmark" aria-hidden="true"></i>
                     </button>
@@ -103,8 +103,8 @@
                     </header>
                     <form [formGroup]="newComment" (ngSubmit)="onCommentSubmit()" class="commenting-form">
                         <div class="row">
-                            <div *ngIf="this.user?.nickname else userInputs" class="col-12">
-                                Como usuario: {{this.user.nickname | titlecase}}
+                            <div *ngIf="_user.setted() else userInputs" class="col-12">
+                                Como usuario: {{_user.getNickname()| titlecase}}
                             </div>
                             <ng-template #userInputs>
                                 <div class="form-group col-md-6">

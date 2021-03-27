@@ -1,10 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
-import { User, IUser } from '../models/user';
-import { Observable } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
+import { IUser } from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +27,7 @@ export class AuthService {
   //   return this._http.post(this.url + 'register', params, { headers });
   // }
 
-  setToken(value, expiry = true): void {
+  setToken(value: string, expiry = true): void {
     const now = new Date();
     // `item` is an object which contains the original value
     // as well as the time when it's supposed to expire
@@ -61,7 +60,7 @@ export class AuthService {
       return null;
     }
 
-    return value;
+    return value ?? null;
   }
 
   loggedIn(): boolean {
@@ -78,8 +77,4 @@ export class AuthService {
   //     }
   //   }
   // }
-
-  getUser() {
-    return this._http.get<{ identifier: string; nickname: string; roles: string[]; }>(`${this.url}/user`);
-  }
 }

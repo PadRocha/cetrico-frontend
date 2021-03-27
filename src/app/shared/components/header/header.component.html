@@ -1,40 +1,84 @@
-<header id="header" class="header">
-    <!-- Main Navbar-->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <!-- Navbar Brand -->
-            <div class="navbar-header d-flex align-items-center justify-content-between">
-                <!-- Navbar Brand -->
-                <a class="navbar-brand" [routerLink]="['/blog/home']" title="Home Page">
-                    <img src="assets/icon.ico" width="30" height="30" class="d-inline-block align-top" alt="Home Page">
-                    Cétr!co.Blog
-                </a>
-                <!-- Toggle Button-->
-                <button type="button" data-toggle="collapse" data-target="#navbarcollapse"
-                    aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation"
-                    class="navbar-toggler">
-                    <span></span><span></span><span></span>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Ninth navbar example">
+    <div class="container-xl">
+        <a [routerLink]="['/blog/home']" class="navbar-brand" title="Home Page">
+            <img src="assets/icon.ico" width="30" height="30" class="d-inline-block align-top" alt="Home Page">
+            Cétr!co.Blog
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#toogleMenu"
+            aria-controls="toogleMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="toogleMenu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a [routerLink]="['/blog/home']" routerLinkActive="active" class="nav-link">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/blog/anthology']" routerLinkActive="active" class="nav-link">Antología</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/blog/contact']" routerLinkActive="active" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/blog/search']" routerLinkActive="active" class="nav-link">
+                        Buscar &nbsp; <i class="fas fa-search"></i>
+                    </a>
+                </li>
+            </ul>
+            <div *ngIf="userLogged() else userMenu" class="btn-group" role="group">
+                <button [routerLink]="['/auth/login']" routerLinkActive="active" type="button"
+                    class="btn btn-outline-secondary" title="Ingresa como usuario">
+                    Ingresar
+                </button>
+                <button [routerLink]="['/auth/signin']" routerLinkActive="active" type="button"
+                    class="btn btn-outline-success" title="Registrate como usuario">
+                    Registrarse
                 </button>
             </div>
-            <!-- Navbar Menu -->
-            <div id="navbarcollapse" class="collapse navbar-collapse">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/blog/home']" routerLinkActive="active">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/blog/anthology']" routerLinkActive="active">Antología</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/blog/contact']" routerLinkActive="active">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/blog/search']" routerLinkActive="active">
-                            <i class="fas fa-search"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ng-template #userMenu>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Usuario: {{_user.getNickname() | titlecase}}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a [routerLink]="['/user', _user.getNickname()]" routerLinkActive="active"
+                                class="dropdown-item btn d-flex justify-content-between">
+                                Perfil
+                                <i class="far fa-user-circle"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/user/favorites']" routerLinkActive="active"
+                                class="dropdown-item btn d-flex justify-content-between">
+                                Guardados
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li *ngIf="_user.hasRole(['EDIT', 'GRANT', 'ADMIN'])">
+                            <a [routerLink]="['/dashboard/post']" routerLinkActive="active"
+                                class="dropdown-item btn d-flex justify-content-between">
+                                Nuevo Post
+                                <i class="far fa-file"></i>
+                            </a>
+                        </li>
+                        <li *ngIf="_user.hasRole(['GRANT', 'ADMIN'])">
+                            <a [routerLink]="['/dashboard']" routerLinkActive="active"
+                                class="dropdown-item btn d-flex justify-content-between">
+                                Dashboard
+                                <i class="far fa-list-alt"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a (click)="logOut()" class="dropdown-item btn d-flex justify-content-between">
+                                Salir
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
         </div>
-    </nav>
-</header>
+    </div>
+</nav>
