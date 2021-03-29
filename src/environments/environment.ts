@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   siteName: 'Cétr!co.Blog',
-  httpUrl: 'http://localhost:4000/api',
+  httpUrl: 'http://localhost:5885/api',
   facebookAppId: '922280798574780',
 };
 
