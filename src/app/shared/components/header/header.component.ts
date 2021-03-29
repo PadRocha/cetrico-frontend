@@ -15,17 +15,14 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this._auth.loggedIn())
-      this._user.get().subscribe(res => this._user.set(res), err => {
-
-      });
   }
 
   userLogged(): boolean {
-    return !this._auth.loggedIn();
+    return !this._user.logged();
   }
 
   logOut(): void {
+    this._user.destroy();
     this._auth.logoutUser();
   }
 }

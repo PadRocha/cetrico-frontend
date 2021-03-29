@@ -4,10 +4,10 @@ import { NgZone } from '@angular/core';
 import { TimeAgoPipe } from "./time-ago.pipe";
 
 class NgZoneMock {
-  runOutsideAngular(fn: Function) {
+  runOutsideAngular(fn: (err?: Error) => void) {
     return fn();
   }
-  run(fn: Function) {
+  run(fn: (err?: Error) => void) {
     return fn();
   }
 };

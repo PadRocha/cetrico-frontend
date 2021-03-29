@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { IUser } from '../../models/user';
 
+declare const FB: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,12 +22,6 @@ export class AuthService {
     this.url = environment.httpUrl;
     this.headersJSON = new HttpHeaders().set('Content-Type', 'application/json');
   }
-
-  // public registerUser(user: User): Observable<any> {
-  //   let params = JSON.stringify(user),
-  //     headers = new HttpHeaders().set('Content-Type', 'application/json');
-  //   return this._http.post(this.url + 'register', params, { headers });
-  // }
 
   setToken(value: string, expiry = true): void {
     const now = new Date();
@@ -66,15 +62,4 @@ export class AuthService {
   loggedIn(): boolean {
     return isPlatformBrowser(this.platformId) ? !!localStorage.getItem('token') : false;
   }
-
-  //? This function was removed
-  // public verifyAdmin(err): void {
-  //   if (err instanceof HttpErrorResponse) {
-  //     if (err.status === 423) {
-  //       this._router.navigate(['/home']);
-  //     } else if (err.status === 403 || err.status === 409) {
-  //       this.logoutUser();
-  //     }
-  //   }
-  // }
 }

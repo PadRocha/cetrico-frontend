@@ -9,13 +9,23 @@
                             <label for="nickname">Nickname</label>
                             <input formControlName="nickname"
                                 [class.is-invalid]="userSubmitted && !userForm.get('nickname').valid" type="text"
-                                class="form-control" id="nickname" placeholder="Ingresa Nick">
+                                class="form-control" placeholder="Ingresa Nick">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input formControlName="password"
-                                [class.is-invalid]="userSubmitted && !userForm.get('password').valid" type="password"
-                                class="form-control" id="password" placeholder="Password">
+                            <div class="input-group">
+                                <input #pass formControlName="password"
+                                    [class.is-invalid]="userSubmitted && !userForm.get('password').valid"
+                                    type="password" class="form-control" placeholder="Password">
+                                <div (mouseenter)="showPass()" (click)="showPass()" (mouseleave)="hidePass()"
+                                    (mouseup)="hidePass()" class="input-group-prepend" style="cursor: pointer;">
+                                    <div class="input-group-text">
+                                        &nbsp;
+                                        <i [ngClass]="passwordVisibility ? 'fa-eye' : 'fa-eye-slash'" class="far"></i>
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-check">
                             <input (change)="onCheckboxChange()" type="checkbox" class="form-check-input"

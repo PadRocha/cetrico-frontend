@@ -25,7 +25,7 @@
                     </a>
                 </li>
             </ul>
-            <div *ngIf="userLogged() else userMenu" class="btn-group" role="group">
+            <ng-container *ngIf="userLogged() else userMenu" class="btn-group" role="group">
                 <button [routerLink]="['/auth/login']" routerLinkActive="active" type="button"
                     class="btn btn-outline-secondary" title="Ingresa como usuario">
                     Ingresar
@@ -34,7 +34,7 @@
                     class="btn btn-outline-success" title="Registrate como usuario">
                     Registrarse
                 </button>
-            </div>
+            </ng-container>
             <ng-template #userMenu>
                 <div class="btn-group">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
@@ -70,7 +70,7 @@
                                 <i class="far fa-list-alt"></i>
                             </a>
                         </li>
-                        <li>
+                        <li title="Cerrar sessión">
                             <a (click)="logOut()" class="dropdown-item btn d-flex justify-content-between">
                                 Salir
                                 <i class="fas fa-sign-out-alt"></i>

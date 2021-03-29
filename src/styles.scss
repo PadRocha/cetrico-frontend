@@ -204,31 +204,27 @@ a.hero-link {
   }
 
   .title,
-  .date,
-  .comments,
-  .views {
+  .metadata {
     font-weight: 400;
     color: #999;
     text-transform: capitalize;
+
+    i {
+      margin-right: 5px;
+      font-size: 1.1em;
+    }
+
+    &::after {
+      content: "|";
+      display: inline-block;
+      margin: 0 7px;
+      font-size: 0.9em;
+      color: #ccc;
+    }
   }
 
-  .title i,
-  .date i,
-  .comments i,
-  .views i {
-    margin-right: 5px;
-    font-size: 1.1em;
-  }
-
-  .title::after,
-  .date::after,
-  .comments::after,
-  .views::after {
-    content: "|";
-    display: inline-block;
-    margin: 0 7px;
-    font-size: 0.9em;
-    color: #ccc;
+  .metadata:last-child::after {
+    display: none;
   }
 
   .post-tags {
@@ -251,10 +247,6 @@ a.hero-link {
         border-color: #9055a2;
       }
     }
-  }
-
-  .meta-last::after {
-    display: none;
   }
 }
 

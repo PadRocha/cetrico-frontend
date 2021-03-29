@@ -5,14 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { IComment } from '@shared/models/comment';
 import { IPost } from '@shared/models/post';
-import { AuthService } from 'app/auth/services/auth/auth.service';
 import { UserService } from 'app/auth/services/user/user.service';
 import { ArrivalsService } from 'app/blog/services/arrivals/arrivals.service';
 import { ExchangeService } from 'app/blog/services/exchange/exchange.service';
 import { MetaService } from 'app/blog/services/meta/meta.service';
 import { ShippingService } from 'app/blog/services/shipping/shipping.service';
-import { forkJoin } from 'rxjs';
-import { take } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -47,7 +44,6 @@ export class PostComponent implements OnInit {
     private _arrival: ArrivalsService,
     private _shipping: ShippingService,
     private _exchange: ExchangeService,
-    private _auth: AuthService,
     public _user: UserService,
     private _titlecase: TitleCasePipe,
   ) {
@@ -61,7 +57,7 @@ export class PostComponent implements OnInit {
       translate: 'yes',
       enableToolbar: true,
       showToolbar: true,
-      // placeholder: 'Enter text here...',
+      placeholder: 'Comenta ...',
       defaultParagraphSeparator: 'p',
       // defaultFontName: '',
       // defaultFontSize: '',
@@ -181,41 +177,46 @@ export class PostComponent implements OnInit {
   private paramsMap(): void {
     this._route.paramMap.subscribe(params => {
       this.titlePost = params.get('title');
-      this.getAssets();
+      this.getPost();
     });
   }
 
-  private dataManagment({ data }: { data: IPost }): void {
-    this._meta.updateTitle(this._titlecase.transform(data.title));
-    this._meta.updateDescription(data.desc);
-    this._meta.generateTags({
-      title: data.title,
-      description: data.desc,
-      image: data.image.url,
-    });
-    this.post = data;
-    this.idPost = data._id;
-    this.getPostPrevious();
-    this.getPostNext();
-  }
+  private getPost(): void {
+    this._arrival.getPost(this.titlePost).subscribe(({ data }) => {
+      this._meta.updateTitle(this._titlecase.transform(data.title));
+      this._meta.updateDescription(data.desc);
+      this._meta.generateTags({
+        title: data.title,
+        description: data.desc,
+        image: data.image.url,
+      });
+      this.post = data;
+      this.idPost = data._id;
+      this.getPostPrevious();
+      this.getPostNext();
+      this.commentsLoaded = false;
+      this.commentsPage = 1;
+      this.comments = new Array<IComment>();
 
-  private getAssets(): void {
-    if (!this._auth.loggedIn()) {
-      this._arrival.getPost(this.titlePost)
-        .subscribe(res => this.dataManagment(res), () => this._router.navigate(['/blog/home']));
-    } else {
-      const post = this._arrival.getPost(this.titlePost).pipe(take(1));
-      const user = this._user.get().pipe(take(1));
-      forkJoin({ post, user }).subscribe(({ post, user }) => {
-        this.dataManagment(post);
-        this._user.set(user);
+      if (this._user.logged())
         this._arrival.getBookmark(this.idPost, this._user.getId()).subscribe(({ data }) => {
           this.bookmarkToogle = data.toogle;
-        }, () => { });
-      }, () => {
-        this._router.navigate(['/blog/home']);
-      });
-    }
+        }, () => Swal.fire({
+          position: 'bottom-end',
+          icon: 'error',
+          title: 'No se ha podido guardar',
+          showClass: {
+            popup: 'animate__animated animate__fadeInUp',
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutDown',
+          },
+          showConfirmButton: false,
+          timer: 2000,
+        }));
+    }, () => {
+      this._router.navigate(['/blog/home']);
+    })
   }
 
   private getPostPrevious(): void {
@@ -231,18 +232,23 @@ export class PostComponent implements OnInit {
   }
 
   private listComment(): void {
-    this._arrival.listCommentPost(this.idPost, this.commentsPage).subscribe(res => {
-      this.comments = this.comments.concat(res.data);
-      this.commentPaginate = {
-        totalDocs: res.totalDocs,
-        hasNextPage: res.hasNextPage,
-      }
-    }, () => this.commentsLoaded = false);
+    this._arrival.listCommentPost(this.idPost, this.commentsPage)
+      .subscribe(({ data, totalDocs, hasNextPage }) => {
+        this.comments = this.comments.concat(data);
+        this.commentPaginate = {
+          totalDocs: totalDocs,
+          hasNextPage: hasNextPage,
+        }
+      }, () => this.commentsLoaded = false);
   }
 
   toogleBookmark(): void {
     this._exchange.updateBookmark(this.idPost, this._user.getId(), this.bookmarkToogle)
       .subscribe(res => this.bookmarkToogle = !this.bookmarkToogle, err => { })
+  }
+
+  accessToEdit() {
+    return (this._user.isEqualTo(this.post?.user._id) && this._user.hasRole('EDIT')) || this._user.hasRole(['GRANT', 'ADMIN']);
   }
 
   addComment(): void {
@@ -251,8 +257,8 @@ export class PostComponent implements OnInit {
   }
 
   onCommentSubmit(): void {
-    if ((this._auth.loggedIn() && this.newComment.get('content').valid) || this.newComment.valid) {
-      const commentData = !this._user.getId()
+    if ((this._user.logged() && this.newComment.get('content').valid) || this.newComment.valid) {
+      const commentData = !this._user.logged()
         ? {
           ...this.newComment.getRawValue(),
           post: this.idPost,
