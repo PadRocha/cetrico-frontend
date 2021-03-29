@@ -2,7 +2,9 @@
 <main class="post blog-post">
     <div class="container">
         <div class="post-single">
-            <div class="post-thumbnail"><img [src]="post?.image.url" alt="..." class="img-fluid"></div>
+            <div class="post-thumbnail">
+                <img loading="lazy" [src]="post?.image.url" alt="..." class="img-fluid">
+            </div>
             <div class="post-details">
                 <div class="post-meta d-flex justify-content-between">
                     <div class="category">
@@ -20,10 +22,10 @@
                 <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                     <a class="author d-flex align-items-center flex-wrap">
                         <div class="avatar">
-                            <img *ngIf="post?.user?.image; else user_default" [src]="post.user.image.url" alt="..."
-                                class="img-fluid">
+                            <img loading="lazy" *ngIf="post?.user?.image; else user_default" [src]="post.user.image.url"
+                                alt="..." class="img-fluid">
                             <ng-template #user_default>
-                                <img src="assets/img/user-default.png" alt="..." class="img-fluid">
+                                <img loading="lazy" src="assets/img/user-default.png" alt="..." class="img-fluid">
                             </ng-template>
                         </div>
                         <div class="title"><span>{{post?.user.nickname | titlecase}}</span></div>
@@ -99,10 +101,11 @@
                         <div class="comment-header d-flex justify-content-between">
                             <div class="user d-flex align-items-center">
                                 <div class="image">
-                                    <img *ngIf="comment?.user?.image; else image_default" [src]="post.user.image.url"
-                                        alt="..." class="img-fluid rounded-circle">
+                                    <img loading="lazy" *ngIf="comment?.user?.image; else image_default"
+                                        [src]="post.user.image.url" alt="..." class="img-fluid rounded-circle">
                                     <ng-template #image_default>
-                                        <img src="assets/img/user.svg" alt="..." class="img-fluid rounded-circle">
+                                        <img loading="lazy" src="assets/img/user.svg" alt="..."
+                                            class="img-fluid rounded-circle">
                                     </ng-template>
                                 </div>
                                 <div class="title">

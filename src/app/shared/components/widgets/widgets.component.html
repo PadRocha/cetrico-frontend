@@ -21,7 +21,7 @@
         <a *ngFor="let post of posts" [routerLink]="['/blog/post', post.title.split(' ').join('_')]" class="btn">
             <div class="item d-flex align-items-center">
                 <div class="image">
-                    <img [src]="post.image.url" alt="..." class="img-fluid">
+                    <img loading="lazy" [src]="post.image.url" alt="..." width="60" height="60" class="img-fluid">
                 </div>
                 <div class="title">
                     <strong>{{post.title | capitalize}}</strong>
