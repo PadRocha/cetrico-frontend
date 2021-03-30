@@ -1,29 +1,36 @@
 $background: #fff;
 $color: #9055a2;
+
 main.posts-listing {
-    padding-left: 0;
-    padding-right: 0;
-    .post {
-        margin-bottom: 50px;
+  padding-left: 0;
+  padding-right: 0;
+
+  .post {
+    margin-bottom: 50px;
+  }
+
+  .post-footer {
+    font-size: 0.8em;
+  }
+
+  .pagination {
+    .page-link {
+      background: $background;
+      color: $color;
+      cursor: pointer;
+
+      &:hover {
+        background: darken($background, 10%);
+      }
     }
-    .post-footer {
-        font-size: 0.8em;
+
+    .is-active {
+      background: $color;
+      color: #fff;
+
+      &:hover {
+        background: darken($color, 10%);
+      }
     }
-    .pagination {
-        .page-link {
-            background: $background;
-            color: $color;
-            cursor: pointer;
-            &:hover {
-                background: darken($background, 10%);
-            }
-        }
-        .is-active {
-            background: $color;
-            color: #fff;
-            &:hover {
-                background: darken($color, 10%);
-            }
-        }
-    }
+  }
 }
