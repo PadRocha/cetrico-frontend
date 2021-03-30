@@ -16,6 +16,7 @@ export class AppComponent {
       '/blog/home',
       '/terms-of-use',
       '/auth',
+      '/user',
       '/config',
     ];
   }

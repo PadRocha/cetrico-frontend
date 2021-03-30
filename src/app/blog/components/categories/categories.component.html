@@ -1,0 +1,14 @@
+<header>
+    <h3>Categorías</h3>
+</header>
+<div class="items">
+    <a *ngFor="let category of categories" [routerLink]="['/blog/search']" [queryParams]="{category: category.name}"
+        class="item d-flex justify-content-between">
+        <span class="category">{{category.name}}</span>
+        <span class="number">{{category.countPosts}}</span>
+    </a>
+</div>
+<button (click)="addCategory()" [ngClass]="{'d-none': !categoryHasNextPage && categoryIsLoading}" type="button"
+    class="btn btn-outline-primary btn-sm btn-block mt-3">
+    Ver más
+</button>

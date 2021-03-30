@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { WidgetsComponent } from './components/widgets/widgets.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,7 +18,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TimeAgoPipe,
     HeaderComponent,
     FooterComponent,
-    WidgetsComponent,
     ScrollToTopComponent,
     TagInputComponent
   ],
@@ -34,7 +32,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TimeAgoPipe,
     HeaderComponent,
     FooterComponent,
-    WidgetsComponent,
     ScrollToTopComponent,
     TagInputComponent
   ],

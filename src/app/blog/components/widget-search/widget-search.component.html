@@ -1,0 +1,11 @@
+<header>
+    <h3>Buscar en el blog</h3>
+</header>
+<div class="search-form">
+    <div class="form-group">
+        <input #title (keyup)="enterSearch($event)" type="search" placeholder="¿Qué estás buscando?">
+        <a [routerLink]="['search']" [queryParams]="{title: title.value}" class="submit">
+            <i class="fas fa-search"></i>
+        </a>
+    </div>
+</div>

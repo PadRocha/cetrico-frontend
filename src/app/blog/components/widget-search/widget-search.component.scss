@@ -1,0 +1,38 @@
+:host {
+  .form-group {
+    position: relative;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.95em;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    background: none;
+
+    &::-moz-placeholder,
+    &::-webkit-input-placeholder,
+    &:-ms-input-placeholder {
+      color: #aaa;
+      font-family: "Open Sans", sans-serif;
+    }
+  }
+
+  .submit {
+    height: 40px;
+    padding: 0;
+    line-height: 40px;
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 0.9em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+}

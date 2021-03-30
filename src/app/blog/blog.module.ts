@@ -11,10 +11,29 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ContactComponent } from './pages/contact/contact.component';
+import { ContainerComponent } from './container/container.component';
+import { WidgetsComponent } from './components/widgets/widgets.component';
+import { LatestPostsComponent } from './components/latest-posts/latest-posts.component';
+import { CategoriesComponent } from './components/categories/categories.component';
+import { TagsComponent } from './components/tags/tags.component';
+import { WidgetSearchComponent } from './components/widget-search/widget-search.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, AnthologyComponent, PostComponent, SearchComponent, ContactComponent],
+  declarations: [
+    HomeComponent,
+    AnthologyComponent,
+    PostComponent,
+    SearchComponent,
+    ContactComponent,
+    ContainerComponent,
+    WidgetsComponent,
+    LatestPostsComponent,
+    CategoriesComponent,
+    TagsComponent,
+    SearchComponent,
+    WidgetSearchComponent,
+  ],
   imports: [
     CommonModule,
     BlogRoutingModule,

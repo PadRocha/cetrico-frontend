@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <ng-container *ngIf="posts.length > 0" class="widget posts">
+    <div *ngIf="posts.length > 0" class="widget posts">
         <div class="blog-posts">
             <a *ngFor="let post of posts" [routerLink]="['/blog/post', post.title.split(' ').join('_')]"
                 class="item d-flex align-items-center">
@@ -50,8 +50,8 @@
                 </div>
             </a>
         </div>
-    </ng-container>
-    <ng-container *ngIf="!posts.length" class="alert alert-danger" role="alert">
+    </div>
+    <div *ngIf="!posts.length" class="alert alert-danger" role="alert">
         No se han encondrado posts
-    </ng-container>
+    </div>
 </main>

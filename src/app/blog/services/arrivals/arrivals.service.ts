@@ -23,12 +23,24 @@ export class ArrivalsService {
     return this._http.get<{ data: ICategory[] }>(`${this.url}/category`);
   }
 
+  listCategoryPage(page: number) {
+    return this._http.get<DataPaginated<ICategory>>(`${this.url}/category/${page}`);
+  }
+
   listTag() {
     return this._http.get<{ data: ITag[] }>(`${this.url}/tag`);
   }
 
+  listTagPage(page: number) {
+    return this._http.get<DataPaginated<ITag>>(`${this.url}/tag/${page}`);
+  }
+
   listPost(params?: { title?: string; tags?: string[]; category?: string; }) {
     return this._http.get<{ data: IPost[] }>(`${this.url}/post`, { params, withCredentials: false });
+  }
+
+  listPostViews() {
+    return this._http.get<{ data: IPost[] }>(`${this.url}/views/post`);
   }
 
   listPostPage(page: number, params?: { title?: string; tags?: string[]; category?: string; }) {

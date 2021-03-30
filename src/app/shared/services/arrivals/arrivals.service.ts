@@ -17,16 +17,4 @@ export class ArrivalsService {
   ) {
     this.url = environment.httpUrl;
   }
-
-  listPostViews() {
-    return this._http.get<{ data: IPost[] }>(`${this.url}/views/post`);
-  }
-
-  listCategoryPage(page: number) {
-    return this._http.get<DataPaginated<ICategory>>(`${this.url}/category/${page}`);
-  }
-
-  listTagPage(page: number) {
-    return this._http.get<DataPaginated<ITag>>(`${this.url}/tag/${page}`);
-  }
 }

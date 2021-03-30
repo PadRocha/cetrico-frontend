@@ -1,0 +1,12 @@
+<header>
+    <h3>Tags</h3>
+</header>
+<ul class="list-inline tag-container">
+    <li *ngFor="let tag of tags" class="list-inline-item">
+        <a class="tag" [routerLink]="['/blog/search']" [queryParams]="{tags: tag.name}">#{{tag.name}}</a>
+    </li>
+</ul>
+<button (click)="addTag()" [ngClass]="{'d-none': !tagHasNextPage && tagIsLoading}" type="button"
+    class="btn btn-outline-primary btn-sm btn-block mt-3">
+    Ver más
+</button>

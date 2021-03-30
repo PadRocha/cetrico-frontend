@@ -8,6 +8,9 @@ const routes: Routes = [{
   path: 'blog',
   loadChildren: () => import('./blog/blog.module').then(m => m.BlogModule),
 }, {
+  path: 'user',
+  loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+}, {
   path: '',
   redirectTo: 'blog',
   pathMatch: 'full'
