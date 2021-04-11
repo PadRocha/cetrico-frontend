@@ -188,7 +188,7 @@ export class PostComponent implements OnInit {
       this._meta.generateTags({
         title: data.title,
         description: data.desc,
-        image: data.image.url,
+        image: data?.image?.url,
       });
       this.post = data;
       this.idPost = data._id;

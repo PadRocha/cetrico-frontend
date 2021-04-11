@@ -1,2 +1,24 @@
-<p>container works!</p>
-<router-outlet></router-outlet>
+<div *ngIf="bookmarkedsIsDisabled() else bookmarkeds" class="container">
+    <div class="user-profile">
+        <div class="profile-header-background"><img
+                src="http://demo.thedevelovers.com/dashboard/queenadmin-1.2/assets/img/city.jpg"
+                alt="Profile Header Background"></div>
+        <div class="row">
+            <profile-info></profile-info>
+            <div class="col-lg-8">
+                <div *ngIf="settingsIsDisabled() else settings" class="profile-info-right mt-3">
+                    <user-header></user-header>
+                    <div class="tab-content">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+                <ng-template #settings>
+                    <router-outlet></router-outlet>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #bookmarkeds>
+    <router-outlet></router-outlet>
+</ng-template>

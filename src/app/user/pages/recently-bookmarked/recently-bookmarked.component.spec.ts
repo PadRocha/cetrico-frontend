@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfileComponent } from './profile.component';
+import { RecentlyBookmarkedComponent } from './recently-bookmarked.component';
 
-describe('ProfileComponent', () => {
-  let component: ProfileComponent;
-  let fixture: ComponentFixture<ProfileComponent>;
+describe('RecentlyBookmarkedComponent', () => {
+  let component: RecentlyBookmarkedComponent;
+  let fixture: ComponentFixture<RecentlyBookmarkedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ]
+      declarations: [ RecentlyBookmarkedComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileComponent);
+    fixture = TestBed.createComponent(RecentlyBookmarkedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

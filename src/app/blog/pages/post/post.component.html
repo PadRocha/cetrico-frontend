@@ -3,7 +3,7 @@
     <div class="container">
         <div class="post-single">
             <div class="post-thumbnail">
-                <img loading="lazy" [src]="post?.image.url" alt="..." class="img-fluid">
+                <img *ngIf="post?.image" loading="lazy" [src]="post.image.url" alt="..." class="img-fluid">
             </div>
             <div class="post-details">
                 <div class="post-meta d-flex justify-content-between">

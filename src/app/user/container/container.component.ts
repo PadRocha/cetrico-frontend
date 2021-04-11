@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-container',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContainerComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+  ) {
+  }
 
   ngOnInit(): void {
   }
 
+  bookmarkedsIsDisabled(): boolean {
+    return !this._router.url.endsWith('bookmarkeds');
+  }
+
+  settingsIsDisabled(): boolean {
+    return !this._router.url.endsWith('settings');
+  }
 }

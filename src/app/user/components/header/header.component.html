@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs flex-column d-flex flex-lg-row">
+    <li class="nav-item">
+        <a [routerLink]="[user]" routerLinkActive="active" class="nav-link">
+            Posts creados
+        </a>
+    </li>
+    <li class="nav-item">
+        <a [routerLink]="['recently-bookmarked', user]" routerLinkActive="active" class="nav-link">
+            Guardados recientemente
+        </a>
+    </li>
+    <li class="nav-item">
+        <a [routerLink]="['recent-comments', user]" routerLinkActive="active" class="nav-link">
+            Comentarios recientes
+        </a>
+    </li>
+</ul>

@@ -6,7 +6,7 @@
             <div *ngFor="let post of posts" class="post col-xl-6">
                 <div class="post-thumbnail">
                     <a [routerLink]="['/blog/post', post.title.split(' ').join('_')]">
-                        <img loading="lazy" [src]="post.image.url" alt="..." class="img-fluid">
+                        <img *ngIf="post?.image" loading="lazy" [src]="post.image.url" alt="..." class="img-fluid">
                     </a>
                 </div>
                 <div class="post-details">
@@ -24,7 +24,7 @@
                     <footer class="post-footer d-flex align-items-center">
                         <a href="#" class="author d-flex align-items-center flex-wrap">
                             <div class="avatar">
-                                <img loading="lazy" *ngIf="post.user?.image; else user_default"
+                                <img *ngIf="post.user?.image; else user_default" loading="lazy"
                                     [src]="post.user.image.url" alt="..." class="img-fluid">
                                 <ng-template #user_default>
                                     <img loading="lazy" src="assets/img/user-default.png" alt="..." class="img-fluid">

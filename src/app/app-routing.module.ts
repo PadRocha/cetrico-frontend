@@ -14,6 +14,10 @@ const routes: Routes = [{
   path: '',
   redirectTo: 'blog',
   pathMatch: 'full'
+}, {
+  path: ':user',
+  redirectTo: 'user/:user',
+  pathMatch: 'full',
 }];
 
 @NgModule({
