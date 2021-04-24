@@ -1,166 +1,136 @@
 <!-- Latest Posts -->
 <main class="post blog-post">
-    <div class="container">
-        <div class="post-single">
-            <div class="post-thumbnail">
-                <img *ngIf="post?.image" loading="lazy" [src]="post.image.url" alt="..." class="img-fluid">
-            </div>
-            <div class="post-details">
-                <div class="post-meta d-flex justify-content-between">
-                    <div class="category">
-                        <a [routerLink]="['/blog/search']" [queryParams]="{category: post?.category.name}"
-                            class="btn">{{post?.category.name}}</a>
-                    </div>
-                </div>
-                <h1 *ngIf="post?.title">
-                    {{post.title | titlecase}}
-                    <button *ngIf="_user.logged()" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
-                        (click)="toogleBookmark()" class="btn" title="Bookmark this post">
-                        <i class="fa fa-bookmark" aria-hidden="true"></i>
-                    </button>
-                </h1>
-                <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
-                    <a class="author d-flex align-items-center flex-wrap">
-                        <div class="avatar">
-                            <img loading="lazy" *ngIf="post?.user?.image; else user_default" [src]="post.user.image.url"
-                                alt="..." class="img-fluid">
-                            <ng-template #user_default>
-                                <img loading="lazy" src="assets/img/user-default.png" alt="..." class="img-fluid">
-                            </ng-template>
-                        </div>
-                        <div class="title"><span>{{post?.user.nickname | titlecase}}</span></div>
-                    </a>
-                    <div class="d-flex align-items-center flex-wrap">
-                        <div class="metadata">
-                            <i class="far fa-clock"></i> {{post?.createdAt | timeAgo}}
-                        </div>
-                        <div class="metadata">
-                            <i class="far fa-eye"></i> {{post?.views}}
-                        </div>
-                        <div class="metadata">
-                            <i class="far fa-comment-alt"></i>{{post?.countComments}}
-                        </div>
-                    </div>
-                </div>
-                <div class="post-body">
-                    <p class="lead">{{post?.desc | capitalize}}</p>
-                    <div [innerHTML]="post?.content"></div>
-                </div>
-                <div class="post-tags list-inline">
-                    <a *ngFor="let tag of post?.tags" [routerLink]="['/search']" [queryParams]="{tags: tag.name}"
-                        class="btn tag list-inline-item">#{{tag.name}}</a>
-                </div>
-                <div class="d-flex flex-row justify-content-lg-end justify-content-center mt-3">
-                    <div class="btn-group" role="group" aria-label="Options Post">
-                        <button class="btn btn-outline-dark" type="buton" title="Imprimir Post">
-                            <i class="fas fa-print"></i>
-                            <br>
-                            Imprimir
-                        </button>
-                        <button class="btn btn-outline-dark" type="buton" title="Imprimir Post">
-                            <i class="fas fa-print"></i>
-                            <br>
-                            Imprimir
-                        </button>
-                        <a *ngIf="accessToEdit()" [routerLink]="['/dashboard/post']" [queryParams]="{edit: post?._id}"
-                            type="button" class="btn btn-outline-dark">
-                            <i class="far fa-edit"></i>
-                            <br>
-                            Editar
-                        </a>
-                    </div>
-                </div>
-                <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
-                    <a *ngIf="!!previous" [routerLink]="['/blog/post', previous.title.split(' ').join('_')]"
-                        class="prev-post text-left d-flex align-items-center" title="Ir a Post anterior">
-                        <div class="icon prev">
-                            <i class="fa fa-angle-left"></i>
-                        </div>
-                        <div class="text">
-                            <strong class="text-primary">Post Anterior </strong>
-                            <h6>{{previous.title | capitalize}}</h6>
-                        </div>
-                    </a>
-                    <a *ngIf="!!next" [routerLink]="['/blog/post', next.title.split(' ').join('_')]"
-                        class="next-post text-right d-flex align-items-center justify-content-end"
-                        title="Ir a Post próximo">
-                        <div class="text">
-                            <strong class="text-primary">Próximo Post </strong>
-                            <h6>{{next.title | capitalize}}</h6>
-                        </div>
-                        <div class="icon next">
-                            <i class="fa fa-angle-right"></i>
-                        </div>
-                    </a>
-                </div>
-                <div #commentsSpace class="row post-comments">
-                    <header>
-                        <h3>Post Comments<span class="no-of-comments">({{commentPaginate.totalDocs}})</span></h3>
-                    </header>
-                    <div *ngFor="let comment of comments" class="comment">
-                        <div class="comment-header d-flex justify-content-between">
-                            <div class="user d-flex align-items-center">
-                                <div class="image">
-                                    <img loading="lazy" *ngIf="comment?.user?.image; else image_default"
-                                        [src]="post.user.image.url" alt="..." class="img-fluid rounded-circle">
-                                    <ng-template #image_default>
-                                        <img loading="lazy" src="assets/img/user.svg" alt="..."
-                                            class="img-fluid rounded-circle">
-                                    </ng-template>
-                                </div>
-                                <div class="title">
-                                    <strong *ngIf="comment?.user else anonNick">
-                                        {{comment.user.nickname | titlecase}}
-                                    </strong>
-                                    <ng-template #anonNick>
-                                        <strong *ngIf="comment?.nickname else nickname_anon">
-                                            Anon<{{comment.nickname | titlecase}}>
-                                        </strong>
-                                        <ng-template #nickname_anon>
-                                            <strong>Anon<{{comment._id | uppercase}}></strong>
-                                        </ng-template>
-                                    </ng-template>
-                                    <span class="date">{{comment.createdAt | date: 'dd MMM | yyyy'}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div [innerHTML]="comment.content" class="comment-body"></div>
-                    </div>
-                    <button *ngIf="commentPaginate.hasNextPage" (click)="addComment()" type="button"
-                        class="btn btn-outline-secondary btn-sm btn-block">
-                        Ver más comentarios
-                    </button>
-                </div>
-                <div class="add-comment">
-                    <header>
-                        <h3>Deja un comentario</h3>
-                    </header>
-                    <form [formGroup]="newComment" (ngSubmit)="onCommentSubmit()" class="commenting-form">
-                        <div class="row">
-                            <ng-container *ngIf="_user.logged() else userInputs" class="col-12">
-                                Como usuario: {{_user.getNickname()| titlecase}}
-                            </ng-container>
-                            <ng-template #userInputs>
-                                <div class="form-group col-md-6">
-                                    <input formControlName="nickname" type="text" class="form-control"
-                                        placeholder="Nombre (opcional)">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input formControlName="email" type="email" class="form-control"
-                                        placeholder="Correo Electrónico (no será compartido)">
-                                </div>
-                            </ng-template>
-                            <div class="form-group col-md-12">
-                                <angular-editor formControlName="content" [config]="editorConfig">
-                                </angular-editor>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-secondary">Submit Comment</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="container">
+    <div class="post-single">
+      <div class="post-thumbnail">
+        <img *ngIf="post?.image" loading="lazy" [src]="post.image.url" alt="..." class="img-fluid">
+      </div>
+      <div class="post-details">
+        <div class="post-meta d-flex justify-content-between">
+          <div class="category">
+            <a [routerLink]="['/blog/search']" [queryParams]="{category: post?.category.name}"
+              class="btn">{{post?.category.name}}</a>
+          </div>
         </div>
+        <h1 *ngIf="post?.title">
+          {{post.title | titlecase}}
+          <button *ngIf="_user.logged()" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
+            (click)="toogleBookmark()" class="btn" title="Bookmark this post">
+            <i class="fa fa-bookmark" aria-hidden="true"></i>
+          </button>
+        </h1>
+        <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
+          <a class="author d-flex align-items-center flex-wrap">
+            <div class="avatar">
+              <img loading="lazy" *ngIf="post?.user?.image; else user_default" [src]="post.user.image.url" alt="..."
+                class="img-fluid">
+              <ng-template #user_default>
+                <img loading="lazy" src="assets/img/user-default.png" alt="..." class="img-fluid">
+              </ng-template>
+            </div>
+            <div class="title"><span>{{post?.user.nickname | titlecase}}</span></div>
+          </a>
+          <div class="d-flex align-items-center flex-wrap">
+            <div class="metadata">
+              <i class="far fa-clock"></i> {{post?.createdAt | timeAgo}}
+            </div>
+            <div class="metadata">
+              <i class="far fa-eye"></i> {{post?.views}}
+            </div>
+            <div class="metadata">
+              <i class="far fa-comment-alt"></i>{{post?.countComments}}
+            </div>
+          </div>
+        </div>
+        <div class="post-body">
+          <p class="lead">{{post?.desc | capitalize}}</p>
+          <div [innerHTML]="post?.content"></div>
+        </div>
+        <div class="post-tags list-inline">
+          <a *ngFor="let tag of post?.tags" [routerLink]="['/search']" [queryParams]="{tags: tag.name}"
+            class="btn tag list-inline-item">#{{tag.name}}</a>
+        </div>
+        <div class="d-flex flex-row justify-content-lg-end justify-content-center mt-3">
+          <div class="btn-group" role="group" aria-label="Options Post">
+            <button class="btn btn-outline-dark" type="buton" title="Imprimir Post">
+              <i class="fas fa-print"></i>
+              <br>
+              Imprimir
+            </button>
+            <button *ngIf="accessToEdit()" class="btn btn-outline-dark" type="buton" title="Eliminar Post">
+              <i class="fas fa-trash-alt"></i>
+              <br>
+              Eliminar
+            </button>
+            <a *ngIf="accessToEdit()" [routerLink]="['/dashboard/post']" [queryParams]="{edit: post?._id}" type="button"
+              class="btn btn-outline-dark">
+              <i class="far fa-edit"></i>
+              <br>
+              Editar
+            </a>
+          </div>
+        </div>
+        <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+          <a *ngIf="!!previous" [routerLink]="['/blog/post', previous.title.split(' ').join('_')]"
+            class="prev-post text-left d-flex align-items-center" title="Ir a Post anterior">
+            <div class="icon prev">
+              <i class="fa fa-angle-left"></i>
+            </div>
+            <div class="text">
+              <strong class="text-primary">Post Anterior </strong>
+              <h6>{{previous.title | capitalize}}</h6>
+            </div>
+          </a>
+          <a *ngIf="!!next" [routerLink]="['/blog/post', next.title.split(' ').join('_')]"
+            class="next-post text-right d-flex align-items-center justify-content-end" title="Ir a Post próximo">
+            <div class="text">
+              <strong class="text-primary">Próximo Post </strong>
+              <h6>{{next.title | capitalize}}</h6>
+            </div>
+            <div class="icon next">
+              <i class="fa fa-angle-right"></i>
+            </div>
+          </a>
+        </div>
+        <div #commentsSpace class="row post-comments">
+          <header>
+            <h3>Post Comments<span class="no-of-comments">({{commentPaginate.totalDocs}})</span></h3>
+          </header>
+          <div *ngFor="let comment of comments" class="comment">
+            <div class="comment-header d-flex justify-content-between">
+              <div class="user d-flex align-items-center">
+                <div class="image">
+                  <img loading="lazy" *ngIf="comment?.user?.image; else image_default" [src]="post.user.image.url"
+                    alt="..." class="img-fluid rounded-circle">
+                  <ng-template #image_default>
+                    <img loading="lazy" src="assets/img/user.svg" alt="..." class="img-fluid rounded-circle">
+                  </ng-template>
+                </div>
+                <div class="title">
+                  <strong *ngIf="comment?.user else anonNick">
+                    {{comment.user.nickname | titlecase}}
+                  </strong>
+                  <ng-template #anonNick>
+                    <strong *ngIf="comment?.nickname else nickname_anon">
+                      Anon<{{comment.nickname | titlecase}}>
+                    </strong>
+                    <ng-template #nickname_anon>
+                      <strong>Anon<{{comment._id | uppercase}}></strong>
+                    </ng-template>
+                  </ng-template>
+                  <span class="date">{{comment.createdAt | date: 'dd MMM | yyyy'}}</span>
+                </div>
+              </div>
+            </div>
+            <div [innerHTML]="comment.content" class="comment-body"></div>
+          </div>
+          <button *ngIf="commentPaginate.hasNextPage" (click)="addComment()" type="button"
+            class="btn btn-outline-secondary btn-sm btn-block">
+            Ver más comentarios
+          </button>
+        </div>
+        <app-comment [post]="post?._id" (onCommentSended)="onCommentSubmit($event)"></app-comment>
+      </div>
     </div>
+  </div>
 </main>

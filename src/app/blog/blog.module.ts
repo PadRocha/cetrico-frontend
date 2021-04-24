@@ -17,6 +17,8 @@ import { LatestPostsComponent } from './components/latest-posts/latest-posts.com
 import { CategoriesComponent } from './components/categories/categories.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { WidgetSearchComponent } from './components/widget-search/widget-search.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { CapitalizePipe } from '@shared/pipes/capitalize/capitalize.pipe';
 
 
 @NgModule({
@@ -33,6 +35,7 @@ import { WidgetSearchComponent } from './components/widget-search/widget-search.
     TagsComponent,
     SearchComponent,
     WidgetSearchComponent,
+    CommentComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +46,6 @@ import { WidgetSearchComponent } from './components/widget-search/widget-search.
     ReactiveFormsModule,
     AngularEditorModule,
   ],
-  providers: [TitleCasePipe]
+  providers: [TitleCasePipe, CapitalizePipe]
 })
 export class BlogModule { }
