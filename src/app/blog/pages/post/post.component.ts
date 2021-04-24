@@ -133,12 +133,12 @@ export class PostComponent implements OnInit {
           'textColor', // ? Color de fuente
           'backgroundColor', // ? Color de resaltado
           'customClasses', // ? Clases personalizadas
-          // 'link', // ? 
-          // 'unlink', // ? 
+          // 'link', // ?
+          // 'unlink', // ?
           'insertImage', // ? Insertar imagen
-          'insertVideo', // ? 
+          'insertVideo', // ?
           'insertHorizontalRule', // ? Línea Horizontal
-          'removeFormat', // ? 
+          'removeFormat', // ?
           'toggleEditorMode' // ? Modo edición
         ]
       ]
@@ -167,7 +167,9 @@ export class PostComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event']) onScroll($event: Event): void {
     const { scrollTop, clientHeight } = ($event.target as HTMLDocument).documentElement;
+    console.log("🚀 ~ file: post.component.ts ~ line 170 ~ PostComponent ~ @HostListener ~ scrollTop", scrollTop)
     const elementOffsetTop = this.commentsSpace.nativeElement.offsetTop - clientHeight;
+    console.log("🚀 ~ file: post.component.ts ~ line 172 ~ PostComponent ~ @HostListener ~ elementOffsetTop", elementOffsetTop)
     if ((scrollTop >= elementOffsetTop) && !this.commentsLoaded) {
       this.commentsLoaded = true;
       this.listComment();
