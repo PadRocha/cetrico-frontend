@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { IUser } from '@shared/models/user';
 
 @Component({
   selector: 'profile-info',
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
   host: { class: 'col-md-4' }
 })
 export class ProfileInfoComponent implements OnInit {
+  @Input() user: IUser;
 
   constructor() { }
 

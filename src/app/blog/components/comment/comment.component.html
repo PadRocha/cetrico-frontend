@@ -3,8 +3,8 @@
 </header>
 <form [formGroup]="newComment" (ngSubmit)="onCommentSubmit()" class="commenting-form">
   <div class="row">
-    <div *ngIf="_user.logged() else userInputs" class="col-12">
-      Como usuario: {{_user.getNickname()| titlecase}}
+    <div *ngIf="_user.logged else userInputs" class="col-12">
+      Como usuario: {{_user.getNickname| titlecase}}
     </div>
     <ng-template #userInputs>
       <div class="form-group col-md-6">

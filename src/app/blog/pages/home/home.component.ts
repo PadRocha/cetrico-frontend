@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._meta.resetTitle();
   }
 
   scroll(elem: HTMLSpanElement): void {

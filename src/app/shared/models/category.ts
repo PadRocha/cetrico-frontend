@@ -1,7 +1,7 @@
 export interface ICategory {
     readonly _id: string;
     readonly name: string;
-    readonly countPosts: number;
+    readonly totalPosts: number;
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }

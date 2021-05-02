@@ -10,7 +10,7 @@ export interface IPost {
     readonly content: string;
     readonly image: IImage;
     readonly views: number;
-    readonly countComments: number;
+    readonly comments: number;
     readonly user: IUser;
     readonly category: ICategory;
     readonly tags: ITag[];

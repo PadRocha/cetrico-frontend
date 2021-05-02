@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IPost } from '@shared/models/post';
 import { ArrivalsService } from '../../services/arrivals/arrivals.service';
@@ -10,7 +10,7 @@ import { MetaService } from '../../services/meta/meta.service';
   styleUrls: ['./anthology.component.scss'],
   host: { 'class': 'col-lg-8' },
 })
-export class AnthologyComponent implements OnInit {
+export class AnthologyComponent implements OnInit, OnDestroy {
   page: number;
   posts: IPost[];
   paginate: number[];
@@ -44,6 +44,12 @@ export class AnthologyComponent implements OnInit {
   ngOnInit(): void {
     this._meta.updateTitle('Blog');
     this.paramsMap();
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this._meta.resetTitle();
   }
 
   private paramsMap(): void {

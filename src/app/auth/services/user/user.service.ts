@@ -3,6 +3,7 @@ import { Injectable, } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { AuthService } from '../auth/auth.service';
+import { IUser } from '@shared/models/user';
 
 interface userIdentity {
   identifier: string;
@@ -45,11 +46,11 @@ export class UserService {
     });
   }
 
-  logged(): boolean {
+  get logged(): boolean {
     return !!this.userChange$.getValue().identifier;
   }
 
-  getId(): string {
+  get getId(): string {
     return this.userChange$.getValue().identifier;
   }
 
@@ -57,11 +58,11 @@ export class UserService {
     return this.userChange$.getValue().identifier === _id;
   }
 
-  getNickname(): string {
+  get getNickname(): string {
     return this.userChange$.getValue().nickname;
   }
 
-  getRoles(): string[] {
+  get getRoles(): string[] {
     return this.userChange$.getValue().roles;
   }
 
@@ -70,5 +71,9 @@ export class UserService {
     return Array.isArray(role)
       ? role.some(r => currentRoles.includes(r))
       : currentRoles.includes(role);
+  }
+
+  getUser(nickname: string) {
+    return this._http.get<{ data: IUser }>(`${this.url}/user?nickname=${nickname}`)
   }
 }

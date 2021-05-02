@@ -1,11 +1,12 @@
 import { TitleCasePipe, ViewportScroller } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IComment } from '@shared/models/comment';
 import { IPost } from '@shared/models/post';
 import { UserService } from 'app/auth/services/user/user.service';
 import { ArrivalsService } from 'app/blog/services/arrivals/arrivals.service';
 import { ExchangeService } from 'app/blog/services/exchange/exchange.service';
+import { ExtraPostsService } from 'app/blog/services/extra-posts/extra-posts.service';
 import { MetaService } from 'app/blog/services/meta/meta.service';
 import Swal from 'sweetalert2';
 
@@ -15,7 +16,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./post.component.scss'],
   host: { class: 'col-lg-8' },
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
   private titlePost: string;
   post: IPost;
   previous: IPost | null;
@@ -37,8 +38,9 @@ export class PostComponent implements OnInit {
     private _scroller: ViewportScroller,
     private _arrival: ArrivalsService,
     private _exchange: ExchangeService,
-    public _user: UserService,
     private _titlecase: TitleCasePipe,
+    private _extra: ExtraPostsService,
+    public _user: UserService,
   ) {
     this.titlePost = '';
     this.previous = null;
@@ -54,6 +56,13 @@ export class PostComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsMap();
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this._meta.resetTitle();
+    this._extra.getRandomPosts();
   }
 
   @HostListener('window:scroll', ['$event']) onScroll($event: Event): void {
@@ -88,8 +97,10 @@ export class PostComponent implements OnInit {
       this.commentsPage = 1;
       this.comments = new Array<IComment>();
 
-      if (this._user.logged())
-        this._arrival.getBookmark(this.post._id, this._user.getId()).subscribe(({ data }) => {
+      this._extra.getRelatedPosts(this.post._id, this._user.logged ? { user: this._user.getId } : {});
+
+      if (this._user.logged)
+        this._arrival.getBookmark(this.post._id, this._user.getId).subscribe(({ data }) => {
           this.bookmarkToogle = data.toogle;
         }, () => Swal.fire({
           position: 'bottom-end',
@@ -133,7 +144,7 @@ export class PostComponent implements OnInit {
   }
 
   toogleBookmark(): void {
-    this._exchange.updateBookmark(this.post._id, this._user.getId(), this.bookmarkToogle)
+    this._exchange.updateBookmark(this.post._id, this._user.getId, this.bookmarkToogle)
       .subscribe(res => this.bookmarkToogle = !this.bookmarkToogle, err => { })
   }
 

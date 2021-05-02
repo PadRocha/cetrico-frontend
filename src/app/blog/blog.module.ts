@@ -19,6 +19,8 @@ import { TagsComponent } from './components/tags/tags.component';
 import { WidgetSearchComponent } from './components/widget-search/widget-search.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CapitalizePipe } from '@shared/pipes/capitalize/capitalize.pipe';
+import { ExtraPostsComponent } from './components/extra-posts/extra-posts.component';
+import { TitleRoutPipe } from '@shared/pipes/title-rout/title-rout.pipe';
 
 
 @NgModule({
@@ -36,6 +38,7 @@ import { CapitalizePipe } from '@shared/pipes/capitalize/capitalize.pipe';
     SearchComponent,
     WidgetSearchComponent,
     CommentComponent,
+    ExtraPostsComponent,
   ],
   imports: [
     CommonModule,
@@ -46,6 +49,6 @@ import { CapitalizePipe } from '@shared/pipes/capitalize/capitalize.pipe';
     ReactiveFormsModule,
     AngularEditorModule,
   ],
-  providers: [TitleCasePipe, CapitalizePipe]
+  providers: [TitleCasePipe, CapitalizePipe, TitleRoutPipe]
 })
 export class BlogModule { }

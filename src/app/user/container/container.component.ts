@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'app/auth/services/user/user.service';
 
 @Component({
   selector: 'app-container',
@@ -10,10 +11,22 @@ export class ContainerComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _route: ActivatedRoute,
+    private _user: UserService,
   ) {
   }
 
   ngOnInit(): void {
+    this.paramMap();
+
+  }
+
+  paramMap(): void {
+    this._route.firstChild.paramMap.subscribe(res => {
+      if (res.has('user')) {
+
+      }
+    });
   }
 
   bookmarkedsIsDisabled(): boolean {

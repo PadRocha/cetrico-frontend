@@ -14,7 +14,7 @@
         </div>
         <h1 *ngIf="post?.title">
           {{post.title | titlecase}}
-          <button *ngIf="_user.logged()" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
+          <button *ngIf="_user.logged" [ngClass]="bookmarkToogle ? 'btn-secondary' : 'btn-info'"
             (click)="toogleBookmark()" class="btn" title="Bookmark this post">
             <i class="fa fa-bookmark" aria-hidden="true"></i>
           </button>
@@ -38,7 +38,7 @@
               <i class="far fa-eye"></i> {{post?.views}}
             </div>
             <div class="metadata">
-              <i class="far fa-comment-alt"></i>{{post?.countComments}}
+              <i class="far fa-comment-alt"></i>{{post?.comments}}
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@
           </div>
         </div>
         <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
-          <a *ngIf="!!previous" [routerLink]="['/blog/post', previous.title.split(' ').join('_')]"
+          <a *ngIf="!!previous" [routerLink]="['/blog/post', previous.title | titlerout]"
             class="prev-post text-left d-flex align-items-center" title="Ir a Post anterior">
             <div class="icon prev">
               <i class="fa fa-angle-left"></i>
@@ -81,7 +81,7 @@
               <h6>{{previous.title | capitalize}}</h6>
             </div>
           </a>
-          <a *ngIf="!!next" [routerLink]="['/blog/post', next.title.split(' ').join('_')]"
+          <a *ngIf="!!next" [routerLink]="['/blog/post', next.title | titlerout]"
             class="next-post text-right d-flex align-items-center justify-content-end" title="Ir a Post próximo">
             <div class="text">
               <strong class="text-primary">Próximo Post </strong>

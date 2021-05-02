@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   }
 
   userLogged(): boolean {
-    return !this._user.logged();
+    return !this._user.logged;
   }
 
   logOut(): void {

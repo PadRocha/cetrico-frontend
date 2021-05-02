@@ -131,8 +131,8 @@ export class CommentComponent implements OnInit {
   }
 
   onCommentSubmit(): void {
-    if ((this._user.logged() && this.newComment.get('content').valid) || this.newComment.valid) {
-      const commentData = !this._user.logged()
+    if ((this._user.logged && this.newComment.get('content').valid) || this.newComment.valid) {
+      const commentData = !this._user.logged
         ? {
           ...this.newComment.getRawValue(),
           post: this.post,
@@ -140,7 +140,7 @@ export class CommentComponent implements OnInit {
         : {
           content: this.newComment.get('content').value,
           post: this.post,
-          user: this._user.getId(),
+          user: this._user.getId,
         };
 
       this._shipping.sendComment(commentData).subscribe(({ data }) => {

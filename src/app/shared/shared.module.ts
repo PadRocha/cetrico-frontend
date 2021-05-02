@@ -8,7 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CapitalizePipe } from './pipes/capitalize/capitalize.pipe';
 import { TimeAgoPipe } from './pipes/time-ago/time-ago.pipe';
 import { TagInputComponent } from './components/tag-input/tag-input.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TitleRoutPipe } from './pipes/title-rout/title-rout.pipe';
 
 
 
@@ -16,10 +17,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     CapitalizePipe,
     TimeAgoPipe,
+    TitleRoutPipe,
     HeaderComponent,
     FooterComponent,
     ScrollToTopComponent,
-    TagInputComponent
+    TagInputComponent,
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   exports: [
     CapitalizePipe,
     TimeAgoPipe,
+    TitleRoutPipe,
     HeaderComponent,
     FooterComponent,
     ScrollToTopComponent,
